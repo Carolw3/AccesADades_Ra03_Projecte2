@@ -1,5 +1,6 @@
 package com.botiga.com_botiga.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,10 +38,10 @@ public class Product {
     private Integer stock;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private Float price;
+    private BigDecimal price;
 
     @Column(name = "rating", precision = 3, scale = 1)
-    private Float rating;
+    private BigDecimal rating;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "product_condition", nullable = false, length = 20)
