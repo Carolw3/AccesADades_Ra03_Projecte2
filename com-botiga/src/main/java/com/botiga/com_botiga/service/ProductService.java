@@ -18,4 +18,8 @@ public class ProductService {
         return products;
     }
 
+    public Product postroduct(Product product){
+        return productRepository.save(product);
+    }
+
 }

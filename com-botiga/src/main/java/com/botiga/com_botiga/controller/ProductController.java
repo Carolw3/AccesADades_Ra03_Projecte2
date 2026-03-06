@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RequestMapping("/api")
@@ -31,6 +34,17 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(products);
+        }
+    }
+    
+    @PostMapping("/products")
+    public  ResponseEntity<Product> postPodcut(@RequestBody Product product) {
+        Product resultado = productService.postroduct(product);
+        
+        if(resultado != null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
     }
     
