@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.botiga.com_botiga.model.Product;
@@ -48,17 +50,27 @@ public class ProductController {
             return ResponseEntity.ok(prod.get());
         }
     }
-    
-    @PostMapping("/products")
+    //Guarda un producto
+    @PostMapping("/product")
     public  ResponseEntity<Product> postPodcut(@RequestBody Product product) {
         Product resultado = productService.postroduct(product);
         
         if(resultado != null){
+            return ResponseEntity.status(HttpStatus.OK).body(resultado);
+        }else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    @PatchMapping("/product/{id}/stock")
+    public ResponseEntity<Product> patchEstoc(@PathVariable() long id, @RequestParam() Integer stock){
+        Product resultado = productService.patchEstoc(id, stock);
+        
+        if(resultado == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
     }
-    
+
 
 }
