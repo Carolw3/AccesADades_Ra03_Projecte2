@@ -40,6 +40,9 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    public Product() {
+    }
+
     @Column(precision = 3, scale = 1)
     private BigDecimal rating;
 
@@ -57,6 +60,19 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "data_updated")
     private LocalDateTime dataUpdated;
+
+    public Product(String name, String description, Integer stock, BigDecimal price, BigDecimal rating,
+            ProductCondition condition, Boolean status, LocalDateTime dataCreated, LocalDateTime dataUpdated) {
+        this.name = name;
+        this.description = description;
+        this.stock = stock;
+        this.price = price;
+        this.rating = rating;
+        this.condition = condition;
+        this.status = status;
+        this.dataCreated = dataCreated;
+        this.dataUpdated = dataUpdated;
+    }
 
     public Long getId() {
         return id;

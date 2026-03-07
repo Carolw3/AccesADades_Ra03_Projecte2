@@ -1,13 +1,21 @@
 package com.botiga.com_botiga.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.service.annotation.PutExchange;
 
 import com.botiga.com_botiga.model.Product;
+import com.botiga.com_botiga.model.ProductCondition;
 import com.botiga.com_botiga.repository.ProductRepository;
 
 @Service
@@ -38,6 +46,46 @@ public class ProductService {
         }
         // Si no lo encontramos pues devolvemos un null
         return null;
+    }
+    
+    
+    public String uploadCsv (MultipartFile csv) throws IOException{
+        List<String> noAceptados = new ArrayList<>();
+        
+        int inserciones = 0;
+
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(csv.getInputStream()))){
+            // sacamos la capcelera
+            String linea = br.readLine();
+            
+            if(linea == null){
+                return null;
+            }
+            
+            while((linea = br.readLine()) != null){
+                String[] elemento = linea.split(",");
+                if(elemento.length != 7){
+                    noAceptados.add(elemento[0]);
+                    continue;
+                }
+                String name = elemento[0].trim();
+                String description = elemento[1].trim();
+                Integer stock = Integer.parseInt(elemento[2].trim());
+                BigDecimal price = new BigDecimal(elemento[3].trim());
+                BigDecimal rating = new BigDecimal(elemento[4].trim());
+                ProductCondition condition = ProductCondition.fromValue(elemento[5].trim());
+                Boolean status = Boolean.parseBoolean(elemento[6].trim());
+
+                Product product = new Product(name, description, stock, price, rating, condition,status, LocalDateTime.now(), LocalDateTime.now());
+                Product confirmacion = productRepository.save(product);
+                if(confirmacion != null){
+                    inserciones++;
+                }
+
+            }
+        }
+
+        return "Inserciones hechas: " + inserciones + " Y no hechas " + noAceptados.size();
     }
     
 

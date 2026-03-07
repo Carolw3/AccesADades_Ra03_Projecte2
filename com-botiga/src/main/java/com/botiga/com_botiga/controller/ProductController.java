@@ -1,5 +1,6 @@
 package com.botiga.com_botiga.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.botiga.com_botiga.model.Product;
 import com.botiga.com_botiga.service.ProductService;
@@ -71,6 +73,12 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
     }
-
+    
+    @PostMapping("/products/csv")
+    public ResponseEntity<String> addCsv(@RequestParam MultipartFile csv)throws IOException {
+        String resultado = productService.uploadCsv(csv);
+        return ResponseEntity.status(HttpStatus.OK).body(resultado);
+    }
+    
 
 }
