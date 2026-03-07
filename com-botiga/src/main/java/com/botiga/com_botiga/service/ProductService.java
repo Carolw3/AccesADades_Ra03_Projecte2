@@ -47,6 +47,16 @@ public class ProductService {
         // Si no lo encontramos pues devolvemos un null
         return null;
     }
+
+    public boolean deleteProduct(Long id){
+
+        if(productRepository.existsById(id)){
+            productRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
+    }
     
     
     public String uploadCsv (MultipartFile csv) throws IOException{
