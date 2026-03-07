@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.service.annotation.PutExchange;
 
 import com.botiga.com_botiga.model.Product;
 import com.botiga.com_botiga.model.ProductCondition;
@@ -37,6 +36,48 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product patchProduct(Long id, Product productNou){
+        Optional<Product> existe = productRepository.findById(id);
+
+        if(existe.isPresent()){ // para saber si existe ese producto
+
+            Product product = existe.get();
+
+            if(productNou.getName() != null){
+                product.setName(productNou.getName());
+            }
+
+            if(productNou.getDescription() != null){
+                product.setDescription(productNou.getDescription());
+            }
+
+            if(productNou.getStock() != null){
+                product.setStock(productNou.getStock());
+            }
+
+            if(productNou.getPrice() != null){
+                product.setPrice(productNou.getPrice());
+            }
+
+            if(productNou.getRating() != null){
+                product.setRating(productNou.getRating());
+            }
+
+            if(productNou.getCondition() != null){
+                product.setCondition(productNou.getCondition());
+            }
+
+            if(productNou.getStatus() != null){
+                product.setStatus(productNou.getStatus());
+            }
+
+        return productRepository.save(product);
+        }
+
+        return null;
+    }
+
+
     public Product patchEstoc(Long id, Integer stock){
         Optional<Product> existe = productRepository.findById(id);
         if(existe.isPresent()){ // para saber si existe ese producto 
@@ -47,6 +88,31 @@ public class ProductService {
         // Si no lo encontramos pues devolvemos un null
         return null;
     }
+
+    public Product patchPrice(Long id, BigDecimal price){
+        Optional<Product> existe = productRepository.findById(id);
+        if(existe.isPresent()){
+            Product product = existe.get();
+            product.setPrice(price);
+            return productRepository.save(product);
+        }
+        return null;
+    }
+
+
+    public Product patchStatus(Long id, Boolean status){
+
+        Optional<Product> existe = productRepository.findById(id);
+
+        if(existe.isPresent()){
+            Product product = existe.get();
+            product.setStatus(status);
+
+            return productRepository.save(product);
+        }
+        return null;
+    }
+
 
     public boolean deleteProduct(Long id){
 
@@ -98,5 +164,8 @@ public class ProductService {
         return "Inserciones hechas: " + inserciones + " Y no hechas " + noAceptados.size();
     }
     
+    public List<Product> getProductsByName(String name){
+        return productRepository.findByNameStartingWithIgnoreCase(name);
+    }
 
 }
