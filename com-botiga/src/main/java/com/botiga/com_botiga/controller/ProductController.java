@@ -152,7 +152,7 @@ public class ProductController {
         List<Product> products = productService.getProductsByName(name);
 
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }else{
             List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
             return ResponseEntity.ok(productsDto);
@@ -165,7 +165,7 @@ public class ProductController {
         List<Product> products = productService.searchByCondition(condition);
 
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( null);
         }
 
         List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
@@ -174,12 +174,12 @@ public class ProductController {
     }
 
     @GetMapping("/products/search/orderRating")
-    public ResponseEntity<List<ProductRequesteDto>> orderByRating(@RequestParam String camp, @RequestParam String order){
+    public ResponseEntity<List<ProductRequesteDto>> orderByRating(@RequestParam String camp,@RequestParam String order){
 
         List<Product> products = productService.orderByRating(order);
 
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
@@ -187,4 +187,23 @@ public class ProductController {
         return ResponseEntity.ok(productsDto);
     }
 
+    @GetMapping("/products/search/order")
+    public ResponseEntity<List<ProductRequesteDto>> searchProducts(
+            @RequestParam BigDecimal ratingMin,
+            @RequestParam BigDecimal ratingMax,
+            @RequestParam String camp,
+            @RequestParam String order,
+            @RequestParam Integer limit){
+
+        List<Product> products = productService.searchProducts(ratingMin, ratingMax, camp, order, limit);
+
+        if(products.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        List<ProductRequesteDto> productsDto =
+                products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
+
+        return ResponseEntity.ok(productsDto);
+    }
 }

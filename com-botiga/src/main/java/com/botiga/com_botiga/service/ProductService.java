@@ -185,4 +185,27 @@ public class ProductService {
         return productRepository.findAllByOrderByRatingAsc();
     }
 
+    public List<Product> searchProducts(BigDecimal ratingMin, BigDecimal ratingMax, String camp, String order, int limit) {
+
+        List<Product> products = productRepository.findByRatingBetween(ratingMin, ratingMax);
+
+        if(order.equalsIgnoreCase("desc")){
+            products.sort((p1, p2) -> 
+                (p2.getRating() != null ? p2.getRating() : BigDecimal.ZERO)
+                .compareTo(p1.getRating() != null ? p1.getRating() : BigDecimal.ZERO)
+            );
+        }else{
+            products.sort((p1, p2) -> 
+                (p1.getRating() != null ? p1.getRating() : BigDecimal.ZERO)
+                .compareTo(p2.getRating() != null ? p2.getRating() : BigDecimal.ZERO)
+            );
+        }
+
+        if(products.size() > limit){
+            return products.subList(0, limit);
+        }
+
+        return products;
+    }
+
 }
