@@ -168,4 +168,21 @@ public class ProductService {
         return productRepository.findByNameStartingWithIgnoreCase(name);
     }
 
+    public List<Product> searchByName(String prefix){
+        return productRepository.findByNameContainingIgnoreCase(prefix);
+    }
+
+    public List<Product> searchByCondition(ProductCondition condition){
+        return productRepository.findByCondition(condition);
+    }
+
+    public List<Product> orderByRating(String order){
+
+        if(order.equalsIgnoreCase("desc")){
+            return productRepository.findAllByOrderByRatingDesc();
+        }
+
+        return productRepository.findAllByOrderByRatingAsc();
+    }
+
 }

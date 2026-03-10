@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.botiga.com_botiga.DTO.ProductRequesteDto;
 import com.botiga.com_botiga.model.Product;
+import com.botiga.com_botiga.model.ProductCondition;
 import com.botiga.com_botiga.service.ProductService;
 
 
@@ -156,6 +157,34 @@ public class ProductController {
             List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
             return ResponseEntity.ok(productsDto);
         }
+    }
+
+    @GetMapping("/products/search/condition")
+    public ResponseEntity<List<ProductRequesteDto>> searchByCondition(@RequestParam ProductCondition condition){
+
+        List<Product> products = productService.searchByCondition(condition);
+
+        if(products.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
+
+        return ResponseEntity.ok(productsDto);
+    }
+
+    @GetMapping("/products/search/orderRating")
+    public ResponseEntity<List<ProductRequesteDto>> orderByRating(@RequestParam String camp, @RequestParam String order){
+
+        List<Product> products = productService.orderByRating(order);
+
+        if(products.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+
+        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
+
+        return ResponseEntity.ok(productsDto);
     }
 
 }
