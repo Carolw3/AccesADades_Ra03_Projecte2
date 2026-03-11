@@ -174,7 +174,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/search/order")//order?camp=rating&order=desc
-    public ResponseEntity<List<ProductRequesteDto>> orderByRating(@RequestParam String camp,@RequestParam String order){
+    public ResponseEntity<List<ProductRequesteDto>> order(@RequestParam String camp,@RequestParam String order){
 
         List<Product> products = productService.order(camp, order);
 
