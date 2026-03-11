@@ -181,11 +181,26 @@ public class ProductController {
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
+        //Esta linea hace la conversion entity-dto, la usamos porque la buscamos como medida temporal antes de que se explicara en classe el mapping
         List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
 
         return ResponseEntity.ok(productsDto);
     }
 
-    
+    @GetMapping("/products/search/order")//order?camp=rating&order=desc
+    public ResponseEntity<List<ProductRequesteDto>> order(@RequestParam String camp,
+        @RequestParam String order, @RequestParam int min, @RequestParam int max, @RequestParam int limit, @RequestParam String prefix){
+        
+        List<Product> products = productService.filter(camp, order, min, max, limit, prefix);
+
+        if(products.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( null);
+        }
+
+        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
+
+        return ResponseEntity.ok(productsDto);
+
+    }
+
 }

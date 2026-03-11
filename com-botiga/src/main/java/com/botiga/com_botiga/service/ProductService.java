@@ -194,4 +194,27 @@ public class ProductService {
         return null;
     }
 
+    //¡FALTA EL LIMIT, PREGUNTAR A ORIOL!
+    public List<Product> filter(String camp, String order, int min, int max, int limit, String prefix) {
+
+    if (camp.equals("price")) {
+
+        if (order.equalsIgnoreCase("desc")) {
+            return productRepository.findProductsByPriceDesc(min, max, prefix, limit);
+        } else {
+            return productRepository.findProductsByPriceAsc(min, max, prefix, limit);
+        }
+
+    } else if (camp.equals("rating")) {
+
+        if (order.equalsIgnoreCase("desc")) {
+            return productRepository.findProductsByRatingDesc(min, max, prefix, limit);
+        } else {
+            return productRepository.findProductsByRatingAsc(min, max, prefix, limit);
+        }
+    }
+
+    return null;
+}
+
 }
