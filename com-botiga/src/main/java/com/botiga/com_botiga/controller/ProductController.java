@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -173,10 +172,10 @@ public class ProductController {
         return ResponseEntity.ok(productsDto);
     }
 
-    @GetMapping("/products/search/orderRating")
+    @GetMapping("/products/search/order")//order?camp=rating&order=desc
     public ResponseEntity<List<ProductRequesteDto>> orderByRating(@RequestParam String camp,@RequestParam String order){
 
-        List<Product> products = productService.orderByRating(order);
+        List<Product> products = productService.order(camp, order);
 
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -187,23 +186,5 @@ public class ProductController {
         return ResponseEntity.ok(productsDto);
     }
 
-    @GetMapping("/products/search/order")
-    public ResponseEntity<List<ProductRequesteDto>> searchProducts(
-            @RequestParam BigDecimal ratingMin,
-            @RequestParam BigDecimal ratingMax,
-            @RequestParam String camp,
-            @RequestParam String order,
-            @RequestParam Integer limit){
-
-        List<Product> products = productService.searchProducts(ratingMin, ratingMax, camp, order, limit);
-
-        if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
-        }
-
-        List<ProductRequesteDto> productsDto =
-                products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
-
-        return ResponseEntity.ok(productsDto);
-    }
+    
 }

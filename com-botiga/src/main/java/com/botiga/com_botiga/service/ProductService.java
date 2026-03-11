@@ -176,36 +176,22 @@ public class ProductService {
         return productRepository.findByCondition(condition);
     }
 
-    public List<Product> orderByRating(String order){
+    public List<Product> order(String camp, String order){
 
-        if(order.equalsIgnoreCase("desc")){
-            return productRepository.findAllByOrderByRatingDesc();
+        if (camp.equals("price")){
+            if (order.equals("desc")){
+                return productRepository.findAllByOrderByPriceDesc();
+            }
+            return productRepository.findAllByOrderByPriceAsc();
+            
+        }else if(camp.equals("rating")){
+
+            if(order.equalsIgnoreCase("desc")){
+                return productRepository.findAllByOrderByRatingDesc();
+            }
+            return productRepository.findAllByOrderByRatingAsc();
         }
-
-        return productRepository.findAllByOrderByRatingAsc();
-    }
-
-    public List<Product> searchProducts(BigDecimal ratingMin, BigDecimal ratingMax, String camp, String order, int limit) {
-
-        List<Product> products = productRepository.findByRatingBetween(ratingMin, ratingMax);
-
-        if(order.equalsIgnoreCase("desc")){
-            products.sort((p1, p2) -> 
-                (p2.getRating() != null ? p2.getRating() : BigDecimal.ZERO)
-                .compareTo(p1.getRating() != null ? p1.getRating() : BigDecimal.ZERO)
-            );
-        }else{
-            products.sort((p1, p2) -> 
-                (p1.getRating() != null ? p1.getRating() : BigDecimal.ZERO)
-                .compareTo(p2.getRating() != null ? p2.getRating() : BigDecimal.ZERO)
-            );
-        }
-
-        if(products.size() > limit){
-            return products.subList(0, limit);
-        }
-
-        return products;
+        return null;
     }
 
 }
