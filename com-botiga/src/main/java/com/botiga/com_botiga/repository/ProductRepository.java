@@ -32,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findTop10ByConditionOrderByRatingDesc(ProductCondition condition);
     
-
+/* 
     @Query(value = "SELECT * FROM product WHERE price BETWEEN :min AND :max AND prefix = :prefix AND status = 1 ORDER BY price ASC LIMIT :limit", nativeQuery = true)
 List<Product> findProductsByPriceAsc(@Param("min") int min,
                                     @Param("max") int max,
@@ -56,5 +56,5 @@ List<Product> findProductsByRatingDesc(@Param("min") int min,
                                     @Param("max") int max,
                                     @Param("prefix") String prefix,
                                     @Param("limit") int limit);
-
+*/
 }

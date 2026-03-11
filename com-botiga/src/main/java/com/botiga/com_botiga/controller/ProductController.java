@@ -2,6 +2,7 @@ package com.botiga.com_botiga.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.botiga.com_botiga.DTO.ErrorDto;
 import com.botiga.com_botiga.DTO.ProductRequesteDto;
 import com.botiga.com_botiga.model.Product;
 import com.botiga.com_botiga.model.ProductCondition;
@@ -34,6 +36,7 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+
     // ------------------ Endpoints de modificacion de la BDD ------------------------
 
     //Subida automatica de productos a la BDD
@@ -45,23 +48,23 @@ public class ProductController {
 
     //Guarda un producto
     @PostMapping("/product")
-    public  ResponseEntity<Product> postPodcut(@RequestBody Product product) {
+    public  ResponseEntity<?> postPodcut(@RequestBody Product product) {
         Product resultado = productService.postroduct(product);
         
         if(resultado != null){
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al crear"));
         }
     }
 
     //Modifica todo un producto
     @PatchMapping("/product/{id}")
-    public ResponseEntity<Product> patchProduct(@PathVariable() long id, @RequestBody Product product){
+    public ResponseEntity<?> patchProduct(@PathVariable() long id, @RequestBody Product product){
         Product result = productService.patchProduct(id, product);
         
         if(result == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actualizar"));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
@@ -69,11 +72,11 @@ public class ProductController {
 
     //Modifica el stock de un producto
     @PatchMapping("/product/{id}/stock")
-    public ResponseEntity<Product> patchEstoc(@PathVariable() long id, @RequestParam() Integer stock){
+    public ResponseEntity<?> patchEstoc(@PathVariable() long id, @RequestParam() Integer stock){
         Product resultado = productService.patchEstoc(id, stock);
         
         if(resultado == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actulizar estoc"));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
@@ -81,11 +84,11 @@ public class ProductController {
 
     //Modifica el precio de un producto
     @PatchMapping("/product/{id}/price")
-    public ResponseEntity<Product> patchEstoc(@PathVariable() long id, @RequestParam() BigDecimal price){
+    public ResponseEntity<?> patchPrice(@PathVariable() long id, @RequestParam() BigDecimal price){
         Product resultado = productService.patchPrice(id, price);
         
         if(resultado == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actulizar price"));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
@@ -93,11 +96,11 @@ public class ProductController {
 
     //Borrado logico de un producto, modifica el status pasandolo a false (modo de hivernación)
     @PatchMapping("/product/{id}/status")
-    public ResponseEntity<Product> patchStatus(@PathVariable() long id, @RequestParam() Boolean status){
+    public ResponseEntity<?> patchStatus(@PathVariable() long id, @RequestParam() Boolean status){
         Product resultado = productService.patchStatus(id, status);
         
         if(resultado == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actualizar status"));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
         }
@@ -105,7 +108,7 @@ public class ProductController {
     
     //Borrado fisico de un producto
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
 
         boolean eliminado = productService.deleteProduct(id);
 
@@ -113,7 +116,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.OK).body("Producto eliminado correctamente");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto("Error al borrar"));
     }
 
 
@@ -127,7 +130,7 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
 
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(products);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(products);
         }
@@ -135,11 +138,11 @@ public class ProductController {
 
     //Obtener un producto por su ID de producto
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
+    public ResponseEntity<?> getProductById(@PathVariable long id) {
         Optional<Product> prod = productService.getProductById(id);
 
         if(prod.isEmpty()){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al obtener producto por id:" + id));
         }else{
             return ResponseEntity.ok(prod.get());
         }
@@ -149,7 +152,6 @@ public class ProductController {
     @GetMapping("/products/search/{name}")
     public ResponseEntity<List<ProductRequesteDto>> getProductsByName(@PathVariable String name) {
         List<Product> products = productService.getProductsByName(name);
-
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }else{
@@ -163,9 +165,8 @@ public class ProductController {
     public ResponseEntity<List<ProductRequesteDto>> searchByCondition(@RequestParam ProductCondition condition){
 
         List<Product> products = productService.searchByCondition(condition);
-
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
@@ -177,7 +178,6 @@ public class ProductController {
     public ResponseEntity<List<ProductRequesteDto>> order(@RequestParam String camp,@RequestParam String order){
 
         List<Product> products = productService.order(camp, order);
-
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -186,15 +186,15 @@ public class ProductController {
 
         return ResponseEntity.ok(productsDto);
     }
-
+/* 
     @GetMapping("/products/search/order")//order?camp=rating&order=desc
-    public ResponseEntity<List<ProductRequesteDto>> order(@RequestParam String camp,
+    public ResponseEntity<List<?>> order(@RequestParam String camp,
         @RequestParam String order, @RequestParam int min, @RequestParam int max, @RequestParam int limit, @RequestParam String prefix){
         
         List<Product> products = productService.filter(camp, order, min, max, limit, prefix);
-
+        List<ErrorDto> errorD = new ArrayList<>();
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorD);
         }
 
         List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
@@ -202,5 +202,5 @@ public class ProductController {
         return ResponseEntity.ok(productsDto);
 
     }
-
+*/
 }
