@@ -48,7 +48,7 @@ public class ProductController {
     //Guarda un producto
     @PostMapping("/product")
     public  ResponseEntity<?> postPodcut(@RequestBody Product product) {
-        Product resultado = productService.postroduct(product);
+        ProductRequesteDto resultado = productService.postroduct(product);
         
         if(resultado != null){
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
@@ -60,7 +60,7 @@ public class ProductController {
     //Modifica todo un producto
     @PatchMapping("/product/{id}")
     public ResponseEntity<?> patchProduct(@PathVariable() long id, @RequestBody Product product){
-        Product result = productService.patchProduct(id, product);
+        ProductRequesteDto result = productService.patchProduct(id, product);
         
         if(result == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actualizar"));
@@ -72,7 +72,7 @@ public class ProductController {
     //Modifica el stock de un producto
     @PatchMapping("/product/{id}/stock")
     public ResponseEntity<?> patchEstoc(@PathVariable() long id, @RequestParam() Integer stock){
-        Product resultado = productService.patchEstoc(id, stock);
+        ProductRequesteDto resultado = productService.patchEstoc(id, stock);
         
         if(resultado == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actulizar estoc"));
@@ -84,7 +84,7 @@ public class ProductController {
     //Modifica el precio de un producto
     @PatchMapping("/product/{id}/price")
     public ResponseEntity<?> patchPrice(@PathVariable() long id, @RequestParam() BigDecimal price){
-        Product resultado = productService.patchPrice(id, price);
+        ProductRequesteDto resultado = productService.patchPrice(id, price);
         
         if(resultado == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actulizar price"));
@@ -96,12 +96,12 @@ public class ProductController {
     //Borrado logico de un producto, modifica el status pasandolo a false (modo de hivernación)
     @PatchMapping("/product/{id}/status")
     public ResponseEntity<?> patchStatus(@PathVariable() long id, @RequestParam() Boolean status){
-        Product resultado = productService.patchStatus(id, status);
+        ProductRequesteDto ProductRequesteDto = productService.patchStatus(id, status);
         
-        if(resultado == null){
+        if(ProductRequesteDto == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al actualizar status"));
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(resultado);
+            return ResponseEntity.status(HttpStatus.OK).body(ProductRequesteDto);
         }
     }
     
@@ -125,11 +125,11 @@ public class ProductController {
 
     // Es el endpoint para recurperar todos los Productos
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductRequesteDto>> getAllProducts() {
+        List<ProductRequesteDto> products = productService.getAllProducts();
 
         if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(products);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(products);
         }
@@ -137,13 +137,13 @@ public class ProductController {
 
     //Obtener un producto por su ID de producto
     @GetMapping("/product/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable long id) {
-        Optional<Product> prod = productService.getProductById(id);
+    public ResponseEntity<?> getProductById(@PathVariable long id)throws Exception {
+        ProductRequesteDto prod = productService.getProductById(id);
 
-        if(prod.isEmpty()){
+        if(prod == null){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("Error al obtener producto por id:" + id));
         }else{
-            return ResponseEntity.ok(prod.get());
+            return ResponseEntity.status(HttpStatus.OK).body(prod);
         }
     }
 
@@ -162,28 +162,24 @@ public class ProductController {
 
     @GetMapping("/products/search/condition")
     public ResponseEntity<List<ProductRequesteDto>> searchByCondition(@RequestParam ProductCondition condition){
-
-        List<Product> products = productService.searchByCondition(condition);
+        List<ProductRequesteDto> products = productService.searchByCondition(condition);
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
-
-        return ResponseEntity.ok(productsDto);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/products/search/order")//order?camp=rating&order=desc
     public ResponseEntity<List<ProductRequesteDto>> order(@RequestParam String camp,@RequestParam String order){
 
-        List<Product> products = productService.order(camp, order);
+        List<ProductRequesteDto> products = productService.order(camp, order);
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         //Esta linea hace la conversion entity-dto, la usamos porque la buscamos como medida temporal antes de que se explicara en classe el mapping
-        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
 
-        return ResponseEntity.ok(productsDto);
+        return ResponseEntity.ok(products);
     }
 
 

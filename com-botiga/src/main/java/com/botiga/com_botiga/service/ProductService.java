@@ -32,21 +32,29 @@ public class ProductService {
     @Autowired
     Mapper mapper;
 
-    public List<Product> getAllProducts(){
+    public List<ProductRequesteDto> getAllProducts(){
         List<Product> products = productRepository.findAll();
-
-        return products;
+        
+        return mapper.toDtoList(products);
     }
     //Devuelve un producto segun su id
-    public Optional<Product> getProductById(long id){
-        return productRepository.findById(id);
+    public ProductRequesteDto getProductById(long id) throws Exception {
+        Optional<Product> p = productRepository.findById(id);
+
+        if (p.isPresent()) {
+            Product product = p.get();
+            return mapper.toDto(product);
+        }
+
+        return null;
     }
 
-    public Product postroduct(Product product){
-        return productRepository.save(product);
+    public ProductRequesteDto postroduct(Product product){
+       Product p = productRepository.save(product);
+       return mapper.toDto(p);
     }
 
-    public Product patchProduct(Long id, Product productNou){
+    public ProductRequesteDto patchProduct(Long id, Product productNou){
         Optional<Product> existe = productRepository.findById(id);
 
         if(existe.isPresent()){ // para saber si existe ese producto
@@ -80,45 +88,47 @@ public class ProductService {
             if(productNou.getStatus() != null){
                 product.setStatus(productNou.getStatus());
             }
-
-        return productRepository.save(product);
+        Product p =  productRepository.save(product);
+        return mapper.toDto(p);
         }
 
         return null;
     }
 
 
-    public Product patchEstoc(Long id, Integer stock){
+    public ProductRequesteDto patchEstoc(Long id, Integer stock){
         Optional<Product> existe = productRepository.findById(id);
         if(existe.isPresent()){ // para saber si existe ese producto 
             Product product = existe.get();
             product.setStock(stock);
-            return productRepository.save(product);
+            productRepository.save(product);
+            return mapper.toDto(product);
         }
         // Si no lo encontramos pues devolvemos un null
         return null;
     }
 
-    public Product patchPrice(Long id, BigDecimal price){
+    public ProductRequesteDto patchPrice(Long id, BigDecimal price){
         Optional<Product> existe = productRepository.findById(id);
         if(existe.isPresent()){
             Product product = existe.get();
             product.setPrice(price);
-            return productRepository.save(product);
+            productRepository.save(product);
+            return mapper.toDto(product);
         }
         return null;
     }
 
 
-    public Product patchStatus(Long id, Boolean status){
+    public ProductRequesteDto patchStatus(Long id, Boolean status){
 
         Optional<Product> existe = productRepository.findById(id);
 
         if(existe.isPresent()){
             Product product = existe.get();
             product.setStatus(status);
-
-            return productRepository.save(product);
+            productRepository.save(product);
+            return mapper.toDto(product);
         }
         return null;
     }
@@ -182,24 +192,29 @@ public class ProductService {
         return productRepository.findByNameContainingIgnoreCase(prefix);
     }
 
-    public List<Product> searchByCondition(ProductCondition condition){
-        return productRepository.findByCondition(condition);
+    public List<ProductRequesteDto> searchByCondition(ProductCondition condition){
+        List<Product> products = productRepository.findByCondition(condition);
+        return mapper.toDtoList(products);
     }
 
-    public List<Product> order(String camp, String order){
+    public List<ProductRequesteDto> order(String camp, String order){
 
         if (camp.equals("price")){
             if (order.equals("desc")){
-                return productRepository.findAllByOrderByPriceDesc();
+                List<Product> p = productRepository.findAllByOrderByPriceDesc();
+                return mapper.toDtoList(p);
             }
-            return productRepository.findAllByOrderByPriceAsc();
+            List<Product> p = productRepository.findAllByOrderByPriceAsc();
+            return mapper.toDtoList(p);
             
         }else if(camp.equals("rating")){
 
             if(order.equalsIgnoreCase("desc")){
-                return productRepository.findAllByOrderByRatingDesc();
+                List<Product> p = productRepository.findAllByOrderByRatingDesc();
+                return mapper.toDtoList(p);
             }
-            return productRepository.findAllByOrderByRatingAsc();
+            List<Product> p = productRepository.findAllByOrderByRatingAsc();
+            return mapper.toDtoList(p);
         }
         return null;
     }
