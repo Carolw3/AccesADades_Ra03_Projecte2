@@ -186,21 +186,27 @@ public class ProductController {
 
         return ResponseEntity.ok(productsDto);
     }
-/* 
-    @GetMapping("/products/search/order")//order?camp=rating&order=desc
-    public ResponseEntity<List<?>> order(@RequestParam String camp,
-        @RequestParam String order, @RequestParam int min, @RequestParam int max, @RequestParam int limit, @RequestParam String prefix){
-        
-        List<Product> products = productService.filter(camp, order, min, max, limit, prefix);
-        List<ErrorDto> errorD = new ArrayList<>();
-        if(products.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorD);
-        }
 
-        List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
+
+    @GetMapping("/products/search/order")
+    public ResponseEntity<List<ProductRequesteDto>> searchProducts(
+            @RequestParam Double min,
+            @RequestParam Double max,
+            @RequestParam String camp,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String prefix) {
+    try {
+        List<ProductRequesteDto> productsDto = productService.searchProducts(min, max, camp, order, limit, prefix);
+
+        if (productsDto.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
         return ResponseEntity.ok(productsDto);
 
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
-*/
+
 }

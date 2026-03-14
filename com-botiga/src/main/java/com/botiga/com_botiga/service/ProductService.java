@@ -10,12 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.botiga.com_botiga.DTO.ProductRequesteDto;
 import com.botiga.com_botiga.model.Product;
 import com.botiga.com_botiga.model.ProductCondition;
 import com.botiga.com_botiga.repository.ProductRepository;
+
 
 @Service
 public class ProductService {
@@ -193,7 +199,47 @@ public class ProductService {
         }
         return null;
     }
-    /* 
+
+
+    public List<ProductRequesteDto> searchProducts(Double min, Double max, String camp, String order, int limit, String prefix) {
+        if (!camp.equalsIgnoreCase("price") && !camp.equalsIgnoreCase("rating")) {
+            throw new IllegalArgumentException("Campo inválido para ordenar: " + camp);
+        }
+
+        Sort sort = order.equalsIgnoreCase("desc")
+                ? Sort.by(camp).descending()
+                : Sort.by(camp).ascending();
+        Pageable pageable = PageRequest.of(0, limit, sort);
+
+        Page<Product> products;
+
+        if (camp.equalsIgnoreCase("price")) {
+            BigDecimal minPrice = (min != null) ? BigDecimal.valueOf(min) : BigDecimal.ZERO;
+            BigDecimal maxPrice = (max != null) ? BigDecimal.valueOf(max) : BigDecimal.valueOf(Double.MAX_VALUE);
+
+            products = productRepository.findProductsByPriceRange(minPrice, maxPrice, prefix, pageable);
+        } else {
+            BigDecimal minRating = (min != null) ? BigDecimal.valueOf(min) : BigDecimal.ZERO;
+            BigDecimal maxRating = (max != null) ? BigDecimal.valueOf(max) : BigDecimal.valueOf(5); // rating máximo asumido 5
+
+            products = productRepository.findProductsByRatingRange(minRating, maxRating, prefix, pageable);
+        }
+
+        return products.stream()
+                .map(ProductRequesteDto::new)
+                .toList();
+    }
+
+
+
+
+
+
+
+
+
+
+    /*
     //¡FALTA EL LIMIT, PREGUNTAR A ORIOL!
     public List<Product> filter(String camp, String order, int min, int max, int limit, String prefix) {
         if (camp.equals("price")) {
