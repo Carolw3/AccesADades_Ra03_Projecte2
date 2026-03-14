@@ -31,7 +31,7 @@ public class ProductService {
 
     @Autowired
     Mapper mapper;
-
+    // service donde recoge todos los productos
     public List<ProductRequesteDto> getAllProducts(){
         List<Product> products = productRepository.findAll();
         
@@ -48,12 +48,12 @@ public class ProductService {
 
         return null;
     }
-
+    // Servide donde posteamos un product
     public ProductRequesteDto postroduct(Product product){
        Product p = productRepository.save(product);
        return mapper.toDto(p);
     }
-
+    // service donde actualizamos un prodcuto mediante su id
     public ProductRequesteDto patchProduct(Long id, Product productNou){
         Optional<Product> existe = productRepository.findById(id);
 
@@ -95,7 +95,7 @@ public class ProductService {
         return null;
     }
 
-
+    // Servide donde actulaizamos solo em campo de stock meidante la id del producto
     public ProductRequesteDto patchEstoc(Long id, Integer stock){
         Optional<Product> existe = productRepository.findById(id);
         if(existe.isPresent()){ // para saber si existe ese producto 
@@ -107,7 +107,7 @@ public class ProductService {
         // Si no lo encontramos pues devolvemos un null
         return null;
     }
-
+    // Service donde actualizamos el preco mediante la id del producto
     public ProductRequesteDto patchPrice(Long id, BigDecimal price){
         Optional<Product> existe = productRepository.findById(id);
         if(existe.isPresent()){
@@ -119,7 +119,7 @@ public class ProductService {
         return null;
     }
 
-
+    // service para actulizara el status del componente
     public ProductRequesteDto patchStatus(Long id, Boolean status){
 
         Optional<Product> existe = productRepository.findById(id);
@@ -133,7 +133,7 @@ public class ProductService {
         return null;
     }
 
-
+    // service para borrar un producto mediante la id
     public boolean deleteProduct(Long id){
 
         if(productRepository.existsById(id)){
@@ -144,7 +144,7 @@ public class ProductService {
         return false;
     }
     
-    
+    // service para subir de manera masiva muchos productos 
     public String uploadCsv (MultipartFile csv) throws IOException{
         List<String> noAceptados = new ArrayList<>();
         
@@ -183,20 +183,22 @@ public class ProductService {
 
         return "Inserciones hechas: " + inserciones + " Y no hechas " + noAceptados.size();
     }
-    
-    public List<Product> getProductsByName(String name){
-        return productRepository.findByNameStartingWithIgnoreCase(name);
+    // servide donde obtenemos todos los productos mediante un nombre
+    public List<ProductRequesteDto> getProductsByName(String name){
+        List<Product> p =  productRepository.findByNameStartingWithIgnoreCase(name);
+        return mapper.toDtoList(p);
     }
-
-    public List<Product> searchByName(String prefix){
-        return productRepository.findByNameContainingIgnoreCase(prefix);
+    // Servide donde recogemos todos los productos mediante un prefijo
+    public List<ProductRequesteDto> searchByName(String prefix){
+        List<Product> p = productRepository.findByNameContainingIgnoreCase(prefix);
+        return mapper.toDtoList(p);
     }
-
+    // Serivde donde recoemos todos los productos que cumplan una condicion
     public List<ProductRequesteDto> searchByCondition(ProductCondition condition){
         List<Product> products = productRepository.findByCondition(condition);
         return mapper.toDtoList(products);
     }
-
+    // Service que rrecogemos todos los productos mediante el campo y ordenador de orden asc y desc
     public List<ProductRequesteDto> order(String camp, String order){
 
         if (camp.equals("price")){
@@ -219,7 +221,7 @@ public class ProductService {
         return null;
     }
 
-
+    //Service donde recogemos todos los productos que tengas las condicones que tenemos en los parametros de la firma
     public List<ProductRequesteDto> searchProducts(BigDecimal min, BigDecimal max, String camp, String order, int limit, String prefix) throws Exception {
         if (!camp.equalsIgnoreCase("price") && !camp.equalsIgnoreCase("rating")) {
             throw new IllegalArgumentException("Campo inválido para ordenar: " + camp);
@@ -253,7 +255,7 @@ public class ProductService {
     }
 
 
-
+    // Servie donde recogemos todos los productos que sea de buen valor y precio 
     public List<ProductRequesteDto> searchQualityPrice(){
 
         List<Product> products = productRepository.findTop5BestQualityPrice();
@@ -263,7 +265,7 @@ public class ProductService {
         return dtos;
     }
 
-
+    // Service donde recogemos todos los productos que son mas nuevos y estan mejor valorados
     public List<ProductRequesteDto> bestNews(){
         List<Product> products = productRepository.findTop10NewProductsByRating();
 
@@ -271,7 +273,7 @@ public class ProductService {
         return dtos;
     }
 
-
+    // Service donde recoge todos los productos mediante de paginas
     public List<ProductRequesteDto> searchInBlock(int page){
 
         Pageable pageable = PageRequest.of(page, 5);

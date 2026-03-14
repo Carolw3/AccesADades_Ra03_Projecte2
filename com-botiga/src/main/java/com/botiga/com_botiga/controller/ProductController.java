@@ -150,12 +150,11 @@ public class ProductController {
     //Obtener todos los productos que empiecen por la String facilitada y que tienen el estatus en true
     @GetMapping("/products/search/{name}")
     public ResponseEntity<List<ProductRequesteDto>> getProductsByName(@PathVariable String name) {
-        List<Product> products = productService.getProductsByName(name);
+        List<ProductRequesteDto> products = productService.getProductsByName(name);
         if(products.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }else{
-            List<ProductRequesteDto> productsDto = products.stream().map(ProductRequesteDto::new).collect(Collectors.toList());
-            return ResponseEntity.ok(productsDto);
+            return ResponseEntity.ok(products);
         }
     }
     
