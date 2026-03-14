@@ -25,6 +25,9 @@ public class ProductRequesteDto {
         this.condition = p.getCondition();
     }
 
+    public ProductRequesteDto() {
+    }
+
     public Long getId() {
         return id;
     }

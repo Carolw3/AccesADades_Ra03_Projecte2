@@ -189,8 +189,8 @@ public class ProductController {
 
 
     @GetMapping("/products/search/searchOrder")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam BigDecimal min,@RequestParam BigDecimal max,@RequestParam String camp,@RequestParam(defaultValue = "asc") String order,@RequestParam(defaultValue = "10") int limit,@RequestParam(required = false) String prefix) throws Exception {
-        List<Product> productRequesteDtos = productService.searchProducts(min, max, camp, order, limit, prefix);
+    public ResponseEntity<List<ProductRequesteDto>> searchProducts(@RequestParam BigDecimal min,@RequestParam BigDecimal max,@RequestParam String camp,@RequestParam(defaultValue = "asc") String order,@RequestParam(defaultValue = "10") int limit,@RequestParam(required = false) String prefix) throws Exception {
+        List<ProductRequesteDto> productRequesteDtos = productService.searchProducts(min, max, camp, order, limit, prefix);
 
         if(productRequesteDtos.isEmpty()){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

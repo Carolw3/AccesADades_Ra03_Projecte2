@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.botiga.com_botiga.DTO.ProductRequesteDto;
+import com.botiga.com_botiga.mapper.Mapper;
 import com.botiga.com_botiga.model.Product;
 import com.botiga.com_botiga.model.ProductCondition;
 import com.botiga.com_botiga.repository.ProductRepository;
@@ -27,6 +28,9 @@ import com.botiga.com_botiga.repository.ProductRepository;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    Mapper mapper;
 
     public List<Product> getAllProducts(){
         List<Product> products = productRepository.findAll();
@@ -201,7 +205,7 @@ public class ProductService {
     }
 
 
-    public List<Product> searchProducts(BigDecimal min, BigDecimal max, String camp, String order, int limit, String prefix) throws Exception {
+    public List<ProductRequesteDto> searchProducts(BigDecimal min, BigDecimal max, String camp, String order, int limit, String prefix) throws Exception {
         if (!camp.equalsIgnoreCase("price") && !camp.equalsIgnoreCase("rating")) {
             throw new IllegalArgumentException("Campo inválido para ordenar: " + camp);
         }
@@ -209,18 +213,23 @@ public class ProductService {
         if(camp.equals("price")){
             if(order.equals("desc")){
                 Pageable pageable = PageRequest.of(0, limit);
-                return productRepository.findProductsByPriceDesc(min, max, prefix, pageable);
+                List<Product> product = productRepository.findProductsByPriceDesc(min, max, prefix, pageable);
+                return mapper.toDtoList(product);
             }else{
                 Pageable pageable = PageRequest.of(0, limit);
-                return productRepository.findProductsByPriceAsc(min, max, prefix, pageable);
+                List<Product> product = productRepository.findProductsByPriceAsc(min, max, prefix, pageable);
+                return mapper.toDtoList(product);
+
             }
         }else if(camp.equals("rating")){
             if(order.equals("desc")){
                 Pageable pageable = PageRequest.of(0, limit);
-                return productRepository.findProductsByRatingDesc(min, max, prefix, pageable);
+                List<Product> product = productRepository.findProductsByRatingDesc(min, max, prefix, pageable);
+                return mapper.toDtoList(product);
             }else{
                 Pageable pageable = PageRequest.of(0, limit);
-                return productRepository.findProductsByRatingAsc(min, max, prefix, pageable);
+                List<Product> product = productRepository.findProductsByRatingAsc(min, max, prefix, pageable);
+                return mapper.toDtoList(product);
             }
         }else{
             return null;
