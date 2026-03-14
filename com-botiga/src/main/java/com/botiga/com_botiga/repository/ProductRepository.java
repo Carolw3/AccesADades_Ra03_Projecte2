@@ -34,10 +34,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop10ByConditionOrderByRatingDesc(ProductCondition condition);
 
     @Query(value = """
-    SELECT * 
-    FROM productes 
-    WHERE price BETWEEN :min AND :max 
-    AND status = 1 
+    SELECT *
+    FROM productes
+    WHERE price BETWEEN :min AND :max
+    AND status = 1
     AND (:prefix IS NULL OR name LIKE CONCAT(:prefix, '%'))
     ORDER BY price DESC
     """, nativeQuery = true)
@@ -49,11 +49,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         Pageable pageable
     );
 
-   @Query(value = """
-    SELECT * 
-    FROM productes 
-    WHERE price BETWEEN :min AND :max 
-    AND status = 1 
+    @Query(value = """
+    SELECT *
+    FROM productes
+    WHERE price BETWEEN :min AND :max
+    AND status = 1
     AND (:prefix IS NULL OR name LIKE CONCAT(:prefix, '%'))
     ORDER BY price ASC
     """, nativeQuery = true)
@@ -66,10 +66,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     );
 
     @Query(value = """
-    SELECT * 
-    FROM productes 
-    WHERE rating BETWEEN :min AND :max 
-    AND status = 1 
+    SELECT *
+    FROM productes
+    WHERE rating BETWEEN :min AND :max
+    AND status = 1
     AND (:prefix IS NULL OR name LIKE CONCAT(:prefix, '%'))
     ORDER BY price DESC
     """, nativeQuery = true)
@@ -81,11 +81,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         Pageable pageable
     );
 
-   @Query(value = """
-    SELECT * 
-    FROM productes 
-    WHERE rating BETWEEN :min AND :max 
-    AND status = 1 
+    @Query(value = """
+    SELECT *
+    FROM productes
+    WHERE rating BETWEEN :min AND :max
+    AND status = 1
     AND (:prefix IS NULL OR name LIKE CONCAT(:prefix, '%'))
     ORDER BY price ASC
     """, nativeQuery = true)
@@ -97,30 +97,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         Pageable pageable
     );
 
+    @Query(value = """
+    SELECT *
+    FROM productes
+    WHERE status = 1
+    ORDER BY (quality / price) DESC
+    LIMIT 5
+    """, nativeQuery = true)
+    List<Product> findTop5BestQualityPrice();
 
-/* 
-    @Query(value = "SELECT * FROM product WHERE price BETWEEN :min AND :max AND prefix = :prefix AND status = 1 ORDER BY price ASC LIMIT :limit", nativeQuery = true)
-List<Product> findProductsByPriceAsc(@Param("min") int min,
-                                    @Param("max") int max,
-                                    @Param("prefix") String prefix,
-                                    @Param("limit") int limit);
-
-@Query(value = "SELECT * FROM product WHERE price BETWEEN :min AND :max AND prefix = :prefix AND status = 1 ORDER BY price DESC LIMIT :limit", nativeQuery = true)
-List<Product> findProductsByPriceDesc(@Param("min") int min,
-                                    @Param("max") int max,
-                                    @Param("prefix") String prefix,
-                                    @Param("limit") int limit);
-
-@Query(value = "SELECT * FROM product WHERE price BETWEEN :min AND :max AND prefix = :prefix AND status = 1 ORDER BY rating ASC LIMIT :limit", nativeQuery = true)
-List<Product> findProductsByRatingAsc(@Param("min") int min,
-                                    @Param("max") int max,
-                                    @Param("prefix") String prefix,
-                                    @Param("limit") int limit);
-
-@Query(value = "SELECT * FROM product WHERE price BETWEEN :min AND :max AND prefix = :prefix AND status = 1 ORDER BY rating DESC LIMIT :limit", nativeQuery = true)
-List<Product> findProductsByRatingDesc(@Param("min") int min,
-                                    @Param("max") int max,
-                                    @Param("prefix") String prefix,
-                                    @Param("limit") int limit);
-*/
 }

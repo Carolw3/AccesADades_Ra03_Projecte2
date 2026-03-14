@@ -239,6 +239,15 @@ public class ProductService {
 
 
 
+    public List<ProductRequesteDto> searchQualityPrice(){
+
+        List<Product> products = productRepository.findTop5BestQualityPrice();
+
+        List<ProductRequesteDto> dtos = mapper.toDtoList(products);
+
+        return dtos;
+    }
+
 
 
 

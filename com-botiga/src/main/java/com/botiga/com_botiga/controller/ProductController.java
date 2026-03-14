@@ -200,4 +200,17 @@ public class ProductController {
         
     }
 
+    @GetMapping("/products/search/qualityPrice")
+    public ResponseEntity<List<ProductRequesteDto>> qualityPrice(){
+
+        List<ProductRequesteDto> request = productService.searchQualityPrice();
+
+        if(request.isEmpty()){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(request);
+        }
+
+    }
+
 }
