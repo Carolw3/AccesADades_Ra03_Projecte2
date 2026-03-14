@@ -201,33 +201,31 @@ public class ProductService {
     }
 
 
-    public List<ProductRequesteDto> searchProducts(Double min, Double max, String camp, String order, int limit, String prefix) {
+    public List<Product> searchProducts(BigDecimal min, BigDecimal max, String camp, String order, int limit, String prefix) throws Exception {
         if (!camp.equalsIgnoreCase("price") && !camp.equalsIgnoreCase("rating")) {
             throw new IllegalArgumentException("Campo inválido para ordenar: " + camp);
         }
 
-        Sort sort = order.equalsIgnoreCase("desc")
-                ? Sort.by(camp).descending()
-                : Sort.by(camp).ascending();
-        Pageable pageable = PageRequest.of(0, limit, sort);
-
-        Page<Product> products;
-
-        if (camp.equalsIgnoreCase("price")) {
-            BigDecimal minPrice = (min != null) ? BigDecimal.valueOf(min) : BigDecimal.ZERO;
-            BigDecimal maxPrice = (max != null) ? BigDecimal.valueOf(max) : BigDecimal.valueOf(Double.MAX_VALUE);
-
-            products = productRepository.findProductsByPriceRange(minPrice, maxPrice, prefix, pageable);
-        } else {
-            BigDecimal minRating = (min != null) ? BigDecimal.valueOf(min) : BigDecimal.ZERO;
-            BigDecimal maxRating = (max != null) ? BigDecimal.valueOf(max) : BigDecimal.valueOf(5); // rating máximo asumido 5
-
-            products = productRepository.findProductsByRatingRange(minRating, maxRating, prefix, pageable);
+        if(camp.equals("price")){
+            if(order.equals("desc")){
+                Pageable pageable = PageRequest.of(0, limit);
+                return productRepository.findProductsByPriceDesc(min, max, prefix, pageable);
+            }else{
+                Pageable pageable = PageRequest.of(0, limit);
+                return productRepository.findProductsByPriceAsc(min, max, prefix, pageable);
+            }
+        }else if(camp.equals("rating")){
+            if(order.equals("desc")){
+                Pageable pageable = PageRequest.of(0, limit);
+                return productRepository.findProductsByRatingDesc(min, max, prefix, pageable);
+            }else{
+                Pageable pageable = PageRequest.of(0, limit);
+                return productRepository.findProductsByRatingAsc(min, max, prefix, pageable);
+            }
+        }else{
+            return null;
         }
 
-        return products.stream()
-                .map(ProductRequesteDto::new)
-                .toList();
     }
 
 

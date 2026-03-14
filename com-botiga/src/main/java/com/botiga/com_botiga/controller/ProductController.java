@@ -188,25 +188,16 @@ public class ProductController {
     }
 
 
-    @GetMapping("/products/search/order")
-    public ResponseEntity<List<ProductRequesteDto>> searchProducts(
-            @RequestParam Double min,
-            @RequestParam Double max,
-            @RequestParam String camp,
-            @RequestParam(defaultValue = "asc") String order,
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(required = false) String prefix) {
-    try {
-        List<ProductRequesteDto> productsDto = productService.searchProducts(min, max, camp, order, limit, prefix);
+    @GetMapping("/products/search/searchOrder")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam BigDecimal min,@RequestParam BigDecimal max,@RequestParam String camp,@RequestParam(defaultValue = "asc") String order,@RequestParam(defaultValue = "10") int limit,@RequestParam(required = false) String prefix) throws Exception {
+        List<Product> productRequesteDtos = productService.searchProducts(min, max, camp, order, limit, prefix);
 
-        if (productsDto.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        if(productRequesteDtos.isEmpty()){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(productRequesteDtos);
         }
-
-        return ResponseEntity.ok(productsDto);
-
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        
     }
 
 }
