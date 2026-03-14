@@ -117,4 +117,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     """, nativeQuery = true)
     List<Product> findTop10NewProductsByRating();
 
+
+    @Query(value = """
+    SELECT *
+    FROM productes
+    WHERE status = 1
+    LIMIT 5
+    """, nativeQuery = true)
+    List<Product> findProductsInBlockList(Pageable pageable);
+
 }

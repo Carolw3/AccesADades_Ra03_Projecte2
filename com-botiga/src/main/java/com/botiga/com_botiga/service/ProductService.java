@@ -257,7 +257,14 @@ public class ProductService {
     }
 
 
+    public List<ProductRequesteDto> searchInBlock(int page){
 
+        Pageable pageable = PageRequest.of(page, 5);
+        List<Product> products = productRepository.findProductsInBlockList(pageable);
+
+        List<ProductRequesteDto> dtos = mapper.toDtoList(products);
+        return dtos;
+    }
 
 
 
