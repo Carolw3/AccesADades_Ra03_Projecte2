@@ -106,4 +106,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     """, nativeQuery = true)
     List<Product> findTop5BestQualityPrice();
 
+
+    @Query(value = """
+    SELECT *
+    FROM productes
+    WHERE status = 1
+    AND new_product = 1
+    ORDER BY rating DESC
+    LIMIT 10
+    """, nativeQuery = true)
+    List<Product> findTop10NewProductsByRating();
+
 }

@@ -249,6 +249,12 @@ public class ProductService {
     }
 
 
+    public List<ProductRequesteDto> bestNews(){
+        List<Product> products = productRepository.findTop10NewProductsByRating();
+
+        List<ProductRequesteDto> dtos = mapper.toDtoList(products);
+        return dtos;
+    }
 
 
 

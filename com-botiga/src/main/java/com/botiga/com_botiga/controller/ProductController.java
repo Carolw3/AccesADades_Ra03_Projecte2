@@ -2,7 +2,6 @@ package com.botiga.com_botiga.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -212,5 +211,27 @@ public class ProductController {
         }
 
     }
+
+    @GetMapping("/products/search/bestNews")
+    public ResponseEntity<List<ProductRequesteDto>> bestNews(){
+        List<ProductRequesteDto> dtos = productService.bestNews();
+
+        if(dtos.isEmpty()){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(dtos);
+        }
+    }
+
+    @GetMapping("/productes/search/pages")
+    public ResponseEntity<List<ProductRequesteDto>> getPages(@RequestParam int page) {
+        List<ProductRequesteDto> dtos = productService.searchInBlock(page);
+        if(dtos.isEmpty()){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(dtos);
+        }
+    }
+    
 
 }
