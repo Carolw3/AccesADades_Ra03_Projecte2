@@ -26,7 +26,7 @@ public class Customer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "users")
+    @JoinColumn(name = "userId")
     private User user;
 
     @Column(nullable=false)

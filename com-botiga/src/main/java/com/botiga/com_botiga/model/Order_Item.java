@@ -28,11 +28,13 @@ public class Order_Item {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "productes")
+    @JoinColumn(name = "productId")
     private Product product;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Order> Oders = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "orderId")
+    private Order order;
+
 
     @Column(nullable = false)
     private Integer quantity;
