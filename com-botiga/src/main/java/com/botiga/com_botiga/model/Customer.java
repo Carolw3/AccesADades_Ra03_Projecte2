@@ -1,6 +1,5 @@
 package com.botiga.com_botiga.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,8 +8,6 @@ import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,30 +17,29 @@ import jakarta.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "order")
+@Table(name = "customers")
 @Where(clause = "status = true")
-public class Order {
+public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "customers")
-    private Customer customer;
+    @JoinColumn(name = "users")
+    private User user;
 
-    @CreationTimestamp
-    @Column(name = "order_date", updatable = false)
-    private LocalDateTime orderDate;
+    @Column(nullable=false)
+    private String firstName;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    @Column(nullable=false)
+    private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    @Column(nullable=false, length=9)
+    private String phone;
 
     @Column(nullable=false)
     private Boolean status = true;
-
 
     @UpdateTimestamp
     @Column(name = "data_updated")
@@ -53,7 +49,4 @@ public class Order {
     @Column(name = "data_created", updatable = false)
     private LocalDateTime dataCreated;
 
-
-
-    
 }
