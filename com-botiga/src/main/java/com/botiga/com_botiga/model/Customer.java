@@ -26,7 +26,7 @@ public class Customer {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable=false)
@@ -48,5 +48,91 @@ public class Customer {
     @CreationTimestamp
     @Column(name = "data_created", updatable = false)
     private LocalDateTime dataCreated;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDataUpdated() {
+        return dataUpdated;
+    }
+
+    public void setDataUpdated(LocalDateTime dataUpdated) {
+        this.dataUpdated = dataUpdated;
+    }
+
+    public LocalDateTime getDataCreated() {
+        return dataCreated;
+    }
+
+    public void setDataCreated(LocalDateTime dataCreated) {
+        this.dataCreated = dataCreated;
+    }
+
+    public Customer(String firstName, String lastName, String phone) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
+
+    public Customer(Long id, User user, String firstName, String lastName, String phone, Boolean status,
+            LocalDateTime dataUpdated, LocalDateTime dataCreated) {
+        this.id = id;
+        this.user = user;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.status = status;
+        this.dataUpdated = dataUpdated;
+        this.dataCreated = dataCreated;
+    }
+
+
+    
+    
 
 }

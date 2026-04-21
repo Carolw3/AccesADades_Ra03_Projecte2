@@ -54,6 +54,78 @@ public class User {
     @Column()
     private LocalDateTime dataUpdated;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDataCreated() {
+        return dataCreated;
+    }
+
+    public void setDataCreated(LocalDateTime dataCreated) {
+        this.dataCreated = dataCreated;
+    }
+
+    public LocalDateTime getDataUpdated() {
+        return dataUpdated;
+    }
+
+    public void setDataUpdated(LocalDateTime dataUpdated) {
+        this.dataUpdated = dataUpdated;
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(Long id, List<Role> roles, String email, String password, Boolean status, LocalDateTime dataCreated) {
+        this.id = id;
+        this.roles = roles;
+        this.email = email;
+        this.password = password;
+        this.status = status;
+        this.dataCreated = dataCreated;
+    }
+
+    
+
     
 
 
