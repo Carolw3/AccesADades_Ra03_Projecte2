@@ -77,7 +77,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserCustomerDTO> getAllUser(){
+    public List<UserCustomerDTO> getAllUsers(){
         
         List<User> users = userRepository.findAll();
         List<UserCustomerDTO> ucDTOs = new ArrayList<>();
