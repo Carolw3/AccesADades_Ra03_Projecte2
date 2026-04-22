@@ -19,7 +19,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
-@Data
+
 @Entity
 @Table(name = "users")
 @Where( clause = "status = true")
@@ -28,6 +28,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @ManyToMany
     @JoinTable(
@@ -127,7 +128,8 @@ public class User {
     
 
     
-
+    public User() {
+    }
 
 
 }

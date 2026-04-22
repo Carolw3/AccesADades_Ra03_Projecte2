@@ -1,13 +1,21 @@
 package com.botiga.com_botiga.DTO;
 
 public class UserCustomerDTO {
-
+    private long id;
     private String email;
     private String password;
     private String firstName;
     private String lasName;
     private String phone;
 
+
+    public UserCustomerDTO(long id, String email, String firstName, String lasName, String phone) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lasName = lasName;
+        this.phone = phone;
+    }
 
     public UserCustomerDTO(String email, String password, String firstName, String lasName, String phone) {
         this.email = email;
@@ -16,6 +24,14 @@ public class UserCustomerDTO {
         this.lasName = lasName;
         this.phone = phone;
     }
+
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -47,6 +63,9 @@ public class UserCustomerDTO {
         this.phone = phone;
     }
 
-    
+    public UserCustomerDTO() {
+    }
 
+    
+    
 }

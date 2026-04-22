@@ -1,5 +1,7 @@
 package com.botiga.com_botiga.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,24 @@ public class UserService {
         c.setUser(u); // ← añade esta línea
         customerRepository.save(c);
         return u;
+    }
+
+    public UserCustomerDTO getUser(Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+
+            Optional<Customer> customerOptional = customerRepository.findByUserId(id);
+            Customer customer = customerOptional.get();
+
+            UserCustomerDTO userCusomer = ucMapper.EntityToDto(user, customer);
+            return userCusomer;
+
+        }
+        
+
+        return null;
     }
 
 }

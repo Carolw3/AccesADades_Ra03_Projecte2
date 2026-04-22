@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.botiga.com_botiga.model.User;
 import com.botiga.com_botiga.service.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -35,6 +39,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(user);
         }
     }
+
+    @GetMapping("/usuari/{id}")
+    public ResponseEntity<UserCustomerDTO> getUsuari(@PathVariable long id) {
+
+        UserCustomerDTO userDto = userService.getUser(id);
+
+        if(userDto == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        }
+    }
+    
     
 
 }

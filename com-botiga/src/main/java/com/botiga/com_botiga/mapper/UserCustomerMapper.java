@@ -27,4 +27,15 @@ public class UserCustomerMapper {
 
         return customer;
     }
+
+    public UserCustomerDTO EntityToDto(User user, Customer customer){
+        UserCustomerDTO dto = new UserCustomerDTO(
+            user.getId(),
+            user.getEmail(),  
+            customer.getFirstName(), 
+            customer.getLastName(), 
+            customer.getPhone()
+        );
+        return dto;
+    }
 }

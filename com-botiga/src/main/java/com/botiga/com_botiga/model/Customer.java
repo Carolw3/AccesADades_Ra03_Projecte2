@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Data
 @Entity
 @Table(name = "customers")
 @Where(clause = "status = true")
@@ -129,6 +128,9 @@ public class Customer {
         this.status = status;
         this.dataUpdated = dataUpdated;
         this.dataCreated = dataCreated;
+    }
+
+    public Customer() {
     }
 
 
