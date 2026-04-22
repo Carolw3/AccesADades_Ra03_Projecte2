@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -37,6 +38,9 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "roleId")
     )
     private List<Role> roles = new ArrayList<>();
+
+    @OneToOne(mappedBy="user2", cascade= CascadeType.ALL)
+    Customer customer = new Customer();
 
     @Column(unique= true, nullable=false)
     private String email;

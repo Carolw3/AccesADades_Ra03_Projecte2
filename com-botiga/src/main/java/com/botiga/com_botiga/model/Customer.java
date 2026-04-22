@@ -1,11 +1,14 @@
 package com.botiga.com_botiga.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +16,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,6 +32,16 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+    private List<Customer> customers = new ArrayList<>();
+
+    @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+    private List<Address> addresses = new ArrayList<>();
+
+    @OneToOne()
+    @JoinColumn(name="userId")
+    User user2 = new User();
 
     @Column(nullable=false)
     private String firstName;

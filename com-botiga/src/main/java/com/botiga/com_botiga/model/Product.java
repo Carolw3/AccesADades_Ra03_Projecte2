@@ -2,11 +2,14 @@ package com.botiga.com_botiga.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,8 +17,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Data
@@ -40,9 +42,6 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    public Product() {
-    }
-
     @Column(precision = 3, scale = 1)
     private BigDecimal rating;
 
@@ -60,6 +59,12 @@ public class Product {
     @UpdateTimestamp
     @Column(name = "data_updated")
     private LocalDateTime dataUpdated;
+
+    @OneToMany(mappedBy="product", cascade = CascadeType.ALL)
+    private List<Order_Item> order_items = new ArrayList<>();
+
+    public Product() {
+    }
 
     public Product(String name, String description, Integer stock, BigDecimal price, BigDecimal rating,
             ProductCondition condition, Boolean status, LocalDateTime dataCreated, LocalDateTime dataUpdated) {

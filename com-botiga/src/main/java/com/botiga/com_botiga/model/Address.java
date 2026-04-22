@@ -20,7 +20,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "customerId")
-    private Customer customer;
+    private Customer customer = new Customer();
 
     @Column(nullable = false)
     private String address;
