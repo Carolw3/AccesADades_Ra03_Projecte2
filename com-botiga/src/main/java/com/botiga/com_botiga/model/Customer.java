@@ -29,19 +29,16 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
-    private List<Customer> customers = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();
 
     @OneToOne()
     @JoinColumn(name="userId")
-    User user2 = new User();
+    User user;
 
     @Column(nullable=false)
     private String firstName;

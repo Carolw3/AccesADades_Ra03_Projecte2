@@ -39,8 +39,8 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToOne(mappedBy="user2", cascade= CascadeType.ALL)
-    Customer customer = new Customer();
+    @OneToOne(mappedBy="user", cascade= CascadeType.ALL)
+    Customer customer;
 
     @Column(unique= true, nullable=false)
     private String email;

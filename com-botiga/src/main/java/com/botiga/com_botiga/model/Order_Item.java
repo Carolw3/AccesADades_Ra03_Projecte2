@@ -22,11 +22,11 @@ public class Order_Item {
 
     @ManyToOne
     @JoinColumn(name = "productId")
-    private Product product= new Product();
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "orderId")
-    private Order order = new Order();
+    private Order order;
 
 
     @Column(nullable = false)

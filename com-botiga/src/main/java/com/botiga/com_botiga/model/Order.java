@@ -33,7 +33,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "customerId")
-    private Customer customer = new Customer();
+    private Customer customer;
 
     @CreationTimestamp
     @Column(name = "order_date", updatable = false)
