@@ -31,9 +31,9 @@ public class UserCustomerMapper {
     public UserCustomerDTO EntityToDto(User user, Customer customer){
         UserCustomerDTO dto = new UserCustomerDTO(
             user.getId(),
-            user.getEmail(),  
-            customer.getFirstName(), 
-            customer.getLastName(), 
+            user.getEmail(),
+            customer.getFirstName(),
+            customer.getLastName(),
             customer.getPhone()
         );
         return dto;

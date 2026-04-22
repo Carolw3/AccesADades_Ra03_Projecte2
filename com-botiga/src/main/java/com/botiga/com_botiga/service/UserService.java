@@ -49,9 +49,27 @@ public class UserService {
 
             UserCustomerDTO userCusomer = ucMapper.EntityToDto(user, customer);
             return userCusomer;
-
         }
-        
+        return null;
+    }
+
+
+    public UserCustomerDTO patchUserCustomer(Long id, String email, String phone){
+
+        Optional<User> opUser = userRepository.findById(id);
+        if (opUser.isPresent()){
+            User user = opUser.get();
+            user.setEmail(email);
+            User userAct = userRepository.save(user);
+
+            Optional<Customer> opCustomer = customerRepository.findByUserId(id);
+            Customer customer = opCustomer.get();
+            customer.setPhone(phone);
+            Customer customerAct = customerRepository.save(customer);
+
+            return ucMapper.EntityToDto(userAct, customerAct);
+        }
+
 
         return null;
     }
