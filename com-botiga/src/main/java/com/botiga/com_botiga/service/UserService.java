@@ -53,7 +53,7 @@ public class UserService {
         return null;
     }
 
-
+    @Transactional
     public UserCustomerDTO patchUserCustomer(Long id, String email, String phone){
 
         Optional<User> opUser = userRepository.findById(id);
