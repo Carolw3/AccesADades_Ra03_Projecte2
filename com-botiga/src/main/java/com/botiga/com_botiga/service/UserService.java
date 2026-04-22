@@ -1,5 +1,7 @@
 package com.botiga.com_botiga.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,25 @@ public class UserService {
 
 
         return null;
+    }
+
+    @Transactional
+    public List<UserCustomerDTO> getAllUsers(){
+        
+        List<User> users = userRepository.findAll();
+        List<UserCustomerDTO> ucDTOs = new ArrayList<>();
+
+        for(User u : users){
+            Long userId = u.getId();
+            Optional<Customer> opCus = customerRepository.findByUserId(userId);
+            if(opCus.isPresent()){
+                Customer c = opCus.get();
+                UserCustomerDTO dto = ucMapper.EntityToDto(u, c);
+                ucDTOs.add(dto);
+            }
+        }
+
+        return ucDTOs;
     }
 
 }

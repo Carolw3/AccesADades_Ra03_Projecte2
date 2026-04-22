@@ -1,5 +1,7 @@
 package com.botiga.com_botiga.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +63,19 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userDto);
         }
     }
+
+    @GetMapping("/usuaris")
+    public ResponseEntity<List<UserCustomerDTO>>  getAllUsers() {
+
+        List<UserCustomerDTO> llista =  userService.getAllUsers();
+
+        if(llista == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(llista);
+        }
+    }
+    
     
     
 
