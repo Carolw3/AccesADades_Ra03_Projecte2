@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.botiga.com_botiga.DTO.AddressDTO;
 import com.botiga.com_botiga.DTO.CustomerAddressDTO;
+import com.botiga.com_botiga.DTO.ErrorDto;
 import com.botiga.com_botiga.service.CustomerService;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,25 +28,49 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+
     @PostMapping("/address/{customerId}")
-    public ResponseEntity<CustomerAddressDTO> addAddressForCustomer(@PathVariable Long customerId, @RequestBody List<AddressDTO> addresses){
+    public ResponseEntity<?> addAddressForCustomer(@PathVariable Long customerId, @RequestBody List<AddressDTO> addresses){
 
         CustomerAddressDTO cADto = customerService.saveAddresses(customerId,addresses );
         if(cADto == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se ha podido poner correctamente"));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(cADto);
         }
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<CustomerAddressDTO> findCustomerAndAddressById(@PathVariable Long customerId){
+    public ResponseEntity<?> findCustomerAndAddressById(@PathVariable Long customerId){
 
         CustomerAddressDTO cADto = customerService.findCustomerAndAddressById(customerId);
         if(cADto == null){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se ha econtrado ningun customer con la id: " + customerId));
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(cADto);
         }
     }
+
+    @DeleteMapping("/customer/{customerId}")
+    public ResponseEntity<?> deleteCustomerAdress(@PathVariable Long customerId){
+
+        CustomerAddressDTO cADto = customerService.deleteCustomerAdress(customerId);
+        if(cADto == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se ha ppdido eliminar las direcciones del usuario " + customerId));
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(cADto);
+        }
+    }
+
+    @GetMapping("/customerAll")
+    public  ResponseEntity<List<CustomerAddressDTO>> getAllCustomers() {
+
+        List<CustomerAddressDTO> customers = customerService.getAllCustomers();
+        if(customers == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(customers);
+        }
+    }
+    
 }

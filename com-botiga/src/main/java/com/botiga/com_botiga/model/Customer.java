@@ -32,7 +32,7 @@ public class Customer {
     @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="customer", cascade = CascadeType.ALL, orphanRemoval = true) // es orphanRemoval  es para poder borrar la lista entera en la base de datos
     private List<Address> addresses = new ArrayList<>();
 
     @OneToOne()
