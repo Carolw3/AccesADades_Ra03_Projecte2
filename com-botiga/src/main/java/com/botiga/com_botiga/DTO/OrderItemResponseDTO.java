@@ -15,20 +15,20 @@ public class OrderItemResponseDTO {
         this.unitPrice = unitPrice;
     }
 
-    public Long getProductId() { 
-        return productId; 
+    public Long getProductId() {
+        return productId;
     }
 
-    public String getProductName() { 
-        return productName; 
+    public String getProductName() {
+        return productName;
     }
 
-    public Integer getQuantity() { 
-        return quantity; 
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public BigDecimal getUnitPrice() { 
-        return unitPrice; 
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
     }
 
     public OrderItemResponseDTO() {

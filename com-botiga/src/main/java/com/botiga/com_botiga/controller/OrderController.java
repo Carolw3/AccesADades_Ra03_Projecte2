@@ -44,4 +44,30 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
+
+
+    @PostMapping("/order/{orderId}/products")
+    public ResponseEntity<?> addProductsToOrder(@PathVariable Long orderId, @RequestBody OrderRequestDTO orderRequest) {
+
+        OrderResponseDTO response = orderService.addProductsToOrder(orderId, orderRequest);
+
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se pudieron añadir los productos a la orden: " + orderId));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @PatchMapping("/order/{orderId}/cancel")
+    public ResponseEntity<?> cancelOrder(@PathVariable Long orderId) {
+
+        OrderResponseDTO response = orderService.cancelOrder(orderId);
+
+        if (response == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se pudo cancelar la orden con la id: " + orderId));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
 }

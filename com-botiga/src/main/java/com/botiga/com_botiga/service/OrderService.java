@@ -12,6 +12,7 @@ import com.botiga.com_botiga.DTO.OrderItemResponseDTO;
 import com.botiga.com_botiga.DTO.OrderItemResquestDTO;
 import com.botiga.com_botiga.DTO.OrderRequestDTO;
 import com.botiga.com_botiga.DTO.OrderResponseDTO;
+import com.botiga.com_botiga.mapper.OrderMapper;
 import com.botiga.com_botiga.model.Customer;
 import com.botiga.com_botiga.model.OrderStatus;
 import com.botiga.com_botiga.model.Order_Item;
@@ -31,6 +32,8 @@ public class OrderService {
     CustomerRepository customerRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    OrderMapper orderMapper;
 
     @Transactional
     public OrderResponseDTO createOrder(Long customerId, OrderRequestDTO orderRequest) {
@@ -73,7 +76,7 @@ public class OrderService {
         order.getOrderItems().addAll(items);
         orderRepository.save(order);
 
-        return toResponseDTO(order);
+        return orderMapper.toResponseDTO(order);
     }
 
     @Transactional
@@ -84,35 +87,62 @@ public class OrderService {
 
         Order order = opOrder.get();
 
-        // Només es pot processar si està PENDENT
         if (order.getOrderStatus() != OrderStatus.PENDENT) return null;
 
         order.setOrderStatus(OrderStatus.PROCESSAT);
         orderRepository.save(order);
 
-        return toResponseDTO(order);
+        return orderMapper.toResponseDTO(order);
     }
 
-    // Mètode auxiliar per convertir a DTO
-    private OrderResponseDTO toResponseDTO(Order order) {
-        List<OrderItemResponseDTO> itemDTOs = new ArrayList<>();
 
-        for (Order_Item item : order.getOrderItems()) {
-            itemDTOs.add(new OrderItemResponseDTO(
-                item.getProduct().getId(),
-                item.getProduct().getName(),
-                item.getQuantity(),
-                item.getUnitPrice()
-            ));
+    @Transactional
+    public OrderResponseDTO addProductsToOrder(Long orderId, OrderRequestDTO orderRequest) {
+
+        Optional<Order> opOrder = orderRepository.findById(orderId);
+        if (opOrder.isEmpty()) return null;
+        Order order = opOrder.get();
+
+        BigDecimal total = order.getTotalAmount();
+
+        for (OrderItemResquestDTO itemReq : orderRequest.getItems()) {
+            Optional<Product> opProd = productRepository.findById(itemReq.getProductId());
+            if (opProd.isEmpty()) return null;
+            Product product = opProd.get();
+
+            Order_Item item = new Order_Item();
+            item.setProduct(product);
+            item.setOrder(order);
+            item.setQuantity(itemReq.getQuantity());
+            item.setUnitPrice(product.getPrice());
+
+            BigDecimal subtotal = product.getPrice()
+                .multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+            total = total.add(subtotal);
+
+            order.getOrderItems().add(item);
         }
 
-        return new OrderResponseDTO(
-            order.getId(),
-            order.getCustomer().getId(),
-            order.getOrderStatus().name(),
-            order.getTotalAmount(),
-            order.getOrderDate(),
-            itemDTOs
-        );
+        order.setTotalAmount(total);
+        orderRepository.save(order);
+
+        return orderMapper.toResponseDTO(order);
     }
+
+    @Transactional
+    public OrderResponseDTO cancelOrder(Long orderId) {
+
+        Optional<Order> opOrder = orderRepository.findById(orderId);
+        if (opOrder.isEmpty()) return null;
+        Order order = opOrder.get();
+
+        if (order.getOrderStatus() != OrderStatus.PENDENT) return null;
+
+        order.setOrderStatus(OrderStatus.CANCELAT);
+        orderRepository.save(order);
+
+        return orderMapper.toResponseDTO(order);
+    }
+
+    
 }
