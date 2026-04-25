@@ -60,5 +60,80 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<Order_Item> orderItems = new ArrayList<>();
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDataUpdated() {
+        return dataUpdated;
+    }
+
+    public void setDataUpdated(LocalDateTime dataUpdated) {
+        this.dataUpdated = dataUpdated;
+    }
+
+    public LocalDateTime getDataCreated() {
+        return dataCreated;
+    }
+
+    public void setDataCreated(LocalDateTime dataCreated) {
+        this.dataCreated = dataCreated;
+    }
+
+    public List<Order_Item> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<Order_Item> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Order() {
+    }
+
     
 }
