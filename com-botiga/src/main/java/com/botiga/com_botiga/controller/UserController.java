@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.botiga.com_botiga.DTO.ErrorDto;
 import com.botiga.com_botiga.DTO.UserCustomerDTO;
+import com.botiga.com_botiga.DTO.UserRolesDTO;
 import com.botiga.com_botiga.model.User;
 import com.botiga.com_botiga.service.UserService;
 
@@ -77,7 +78,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(llista);
         }
     }
-    
+    @PatchMapping("/usuari/{id}/roles")
+    public ResponseEntity<?> addRolesToUser(@PathVariable Long id, @RequestBody List<Integer> roleIds) {
+
+    UserRolesDTO userRolesDTO = userService.addRolesToUser(id, roleIds);
+
+    if (userRolesDTO == null) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se pudieron añadir los roles al usuario con la id: " + id));
+    } else {
+        return ResponseEntity.status(HttpStatus.OK).body(userRolesDTO);
+    }
+}
     
     
 

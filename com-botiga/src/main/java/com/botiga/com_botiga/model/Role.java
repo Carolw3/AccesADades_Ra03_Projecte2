@@ -24,4 +24,9 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     private RolesString rolesString;
+
+    public String getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+    }
 }

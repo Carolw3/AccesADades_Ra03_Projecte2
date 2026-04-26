@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.botiga.com_botiga.DTO.UserCustomerDTO;
+import com.botiga.com_botiga.DTO.UserRolesDTO;
 import com.botiga.com_botiga.mapper.UserCustomerMapper;
 import com.botiga.com_botiga.model.Customer;
+import com.botiga.com_botiga.model.Role;
 import com.botiga.com_botiga.model.User;
 import com.botiga.com_botiga.repository.CustomerRepository;
+import com.botiga.com_botiga.repository.RoleRepository;
 import com.botiga.com_botiga.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,8 +31,11 @@ public class UserService {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
 
-    @Transactional 
+
+    @Transactional
     public User addUser(UserCustomerDTO dto){
         User u = ucMapper.toUserEntity(dto);
         userRepository.save(u); // ← guarda primero para obtener el ID
@@ -93,6 +99,33 @@ public class UserService {
         }
 
         return ucDTOs;
+    }
+
+    @Transactional
+    public UserRolesDTO addRolesToUser(Long userId, List<Integer> roleIds) {
+
+        // 1. Busquem l'usuari
+        Optional<User> opUser = userRepository.findById(userId);
+        if (opUser.isEmpty()) return null;
+        User user = opUser.get();
+
+        // 2. Busquem els rols i els afegim a l'usuari
+        for (Integer roleId : roleIds) {
+            Optional<Role> opRole = roleRepository.findById(roleId);
+            if (opRole.isEmpty()) return null;
+            Role role = opRole.get();
+            user.getRoles().add(role);
+        }
+
+        userRepository.save(user);
+
+        // 3. Construïm el DTO de resposta
+        List<String> roleNames = new ArrayList<>();
+        for (Role r : user.getRoles()) {
+            roleNames.add(r.getName());
+        }
+
+        return new UserRolesDTO(user.getId(), user.getEmail(), roleNames);
     }
 
 }
