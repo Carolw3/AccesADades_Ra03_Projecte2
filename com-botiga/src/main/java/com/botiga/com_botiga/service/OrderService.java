@@ -38,7 +38,7 @@ public class OrderService {
     @Transactional
     public OrderResponseDTO createOrder(Long customerId, OrderRequestDTO orderRequest) {
 
-        // 1. Busquem el customer
+        
         Optional<Customer> opCus = customerRepository.findById(customerId);
         if (opCus.isEmpty()) return null;
         Customer customer = opCus.get();
@@ -49,7 +49,7 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.PENDENT);
         order.setTotalAmount(BigDecimal.ZERO);
 
-        // 3. Creem els order_items i calculem el total
+        
         BigDecimal total = BigDecimal.ZERO;
         List<Order_Item> items = new ArrayList<>();
 

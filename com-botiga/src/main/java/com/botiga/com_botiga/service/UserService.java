@@ -38,10 +38,10 @@ public class UserService {
     @Transactional
     public User addUser(UserCustomerDTO dto){
         User u = ucMapper.toUserEntity(dto);
-        userRepository.save(u); // ← guarda primero para obtener el ID
+        userRepository.save(u); 
 
         Customer c = ucMapper.toCustomerEntity(dto);
-        c.setUser(u); // ← añade esta línea
+        c.setUser(u); 
         customerRepository.save(c);
         return u;
     }
@@ -112,8 +112,15 @@ public class UserService {
             if (opRole.isEmpty()) return null;
             Role role = opRole.get();
 
-            boolean yaExiste = user.getRoles().stream()
-                .anyMatch(r -> r.getId().equals(roleId));
+            // Comprobació sense lambda
+            boolean yaExiste = false;
+            for (Role r : user.getRoles()) {
+                if (r.getId().equals(roleId)) {
+                    yaExiste = true;
+                    break;
+                }
+            }
+
             if (!yaExiste) {
                 user.getRoles().add(role);
             }
@@ -137,7 +144,13 @@ public class UserService {
         User user = opUser.get();
 
         for (Integer roleId : roleIds) {
-            user.getRoles().removeIf(role -> role.getId().equals(roleId));
+            List<Role> roles = user.getRoles();
+            for (int i = 0; i < roles.size(); i++) {
+                if (roles.get(i).getId().equals(roleId)) {
+                    roles.remove(i);
+                    break;
+                }
+            }
         }
 
         userRepository.save(user);

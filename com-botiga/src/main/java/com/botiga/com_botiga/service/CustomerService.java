@@ -32,7 +32,7 @@ public class CustomerService {
         Optional<Customer> opCus = customerRepository.findById(customerId);
 
         if (opCus.isEmpty()) {
-            return null; // o llança una excepció com ResourceNotFoundException
+            return null; 
         }
 
         Customer cus = opCus.get();
