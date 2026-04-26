@@ -79,17 +79,27 @@ public class UserController {
         }
     }
     @PatchMapping("/usuari/{id}/roles")
-    public ResponseEntity<?> addRolesToUser(@PathVariable Long id, @RequestBody List<Integer> roleIds) {
+        public ResponseEntity<?> addRolesToUser(@PathVariable Long id, @RequestBody List<Integer> roleIds) {
 
-    UserRolesDTO userRolesDTO = userService.addRolesToUser(id, roleIds);
+        UserRolesDTO userRolesDTO = userService.addRolesToUser(id, roleIds);
 
-    if (userRolesDTO == null) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se pudieron añadir los roles al usuario con la id: " + id));
-    } else {
-        return ResponseEntity.status(HttpStatus.OK).body(userRolesDTO);
+        if (userRolesDTO == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDto("No se pudieron añadir los roles al usuario con la id: " + id));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(userRolesDTO);
+        }
     }
-}
     
-    
+    @PatchMapping("/usuari/{id}/roles/remove")
+    public ResponseEntity<?> removeRolesFromUser(@PathVariable Long id, @RequestBody List<Integer> roleIds) {
+
+    UserRolesDTO userRolesDTO = userService.removeRolesFromUser(id, roleIds);
+        if (userRolesDTO == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorDto("No se pudieron eliminar los roles al usuario con la id: " + id));
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(userRolesDTO);
+        }
+    }
 
 }

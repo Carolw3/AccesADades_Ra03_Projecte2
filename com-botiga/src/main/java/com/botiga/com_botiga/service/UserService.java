@@ -103,23 +103,45 @@ public class UserService {
 
     @Transactional
     public UserRolesDTO addRolesToUser(Long userId, List<Integer> roleIds) {
-
-        // 1. Busquem l'usuari
         Optional<User> opUser = userRepository.findById(userId);
         if (opUser.isEmpty()) return null;
         User user = opUser.get();
 
-        // 2. Busquem els rols i els afegim a l'usuari
         for (Integer roleId : roleIds) {
             Optional<Role> opRole = roleRepository.findById(roleId);
             if (opRole.isEmpty()) return null;
             Role role = opRole.get();
-            user.getRoles().add(role);
+
+            boolean yaExiste = user.getRoles().stream()
+                .anyMatch(r -> r.getId().equals(roleId));
+            if (!yaExiste) {
+                user.getRoles().add(role);
+            }
         }
 
         userRepository.save(user);
 
-        // 3. Construïm el DTO de resposta
+        List<String> roleNames = new ArrayList<>();
+        for (Role r : user.getRoles()) {
+            roleNames.add(r.getName());
+        }
+
+        return new UserRolesDTO(user.getId(), user.getEmail(), roleNames);
+    }
+
+    @Transactional
+    public UserRolesDTO removeRolesFromUser(Long userId, List<Integer> roleIds) {
+
+        Optional<User> opUser = userRepository.findById(userId);
+        if (opUser.isEmpty()) return null;
+        User user = opUser.get();
+
+        for (Integer roleId : roleIds) {
+            user.getRoles().removeIf(role -> role.getId().equals(roleId));
+        }
+
+        userRepository.save(user);
+
         List<String> roleNames = new ArrayList<>();
         for (Role r : user.getRoles()) {
             roleNames.add(r.getName());

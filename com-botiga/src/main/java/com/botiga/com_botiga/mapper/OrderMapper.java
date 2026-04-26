@@ -3,11 +3,14 @@ package com.botiga.com_botiga.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.botiga.com_botiga.DTO.OrderItemResponseDTO;
 import com.botiga.com_botiga.DTO.OrderResponseDTO;
 import com.botiga.com_botiga.model.Order_Item;
 import com.botiga.com_botiga.model.Order;
 
+@Component
 public class OrderMapper {
 
 
